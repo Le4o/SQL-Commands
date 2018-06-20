@@ -231,3 +231,31 @@ begin
 		RAISE_APPLICATION_ERROR(-20301, 'Autor não pode ter menos de 16 anos');
 	end if;
 end;
+
+----------------------CRIANDO TRIGGER GENÉRICA PARA UMA TABELA------------------------
+--Não é possível fazer um trigger para todas as tabelas por conta de ele trabalhar com as variáveis da própria tabela
+
+create or replace trigger TB_LOG_EDITORA
+after delete or insert or update
+on TB_EDITORA
+for each row
+
+declare vOperacao varchar2(100);
+
+begin 
+    if inserting then
+        vOperacao := 'NOVA EDITORA - ' || :NEW.DESCRICAO;
+    else
+        if deleting then
+            vOperacao := 'EDITORA EXCLUÍDA - ' || :OLD.DESCRICAO;
+        else
+            if updating('ENDERECO') then
+                vOperacao := 'ENDEREÇO ALTERADO - ' || :NEW.ENDERECO || ' - ' || :OLD.ENDERECO;
+            else
+                vOperacao := 'EDITORA ALTERADA - ' || :NEW.DESCRICAO || ' - ' || :OLD.ENDERECO;
+            end if;
+        end if;
+    end if;
+    
+    insert into tb_log values (SQ_LOG.NEXTVAL, USER, SYSDATE, vOperacao);
+end;
