@@ -159,7 +159,7 @@ create or replace procedure SP_CALCULA_AREA
 
 	end
 
---Da pra chamar a procedure com E
+--Da pra chamar a procedure com EXEC SP_CALCULA_AREA
 
 	declare
 		begin
@@ -208,4 +208,26 @@ on tb_autor
 
 begin
 	insert into tb_log values (SQ_LOG.NEXTVAL,USER, SYSDATE,'Inserção de um autor');
+end;
+
+-----------------------CRIANDO UMA TRIGGER DMI--------------------------------------
+
+create or replace trigger TR_MENOR_16_ANOS
+before insert or update
+on TB_AUTOR
+for each row
+declare vidade INT;
+begin
+	vIdade := extract (YEAR FROM SYSDATE) - extract (YEAR FROM: NEW.Data_Nascimento);
+	if (vIdade = 16) then
+		if (
+		    extract (MONTH FROM SYSDATE) > extract (MONTH FROM: NEW.Data_Nascimento)
+		   ) then
+		   	vIdade := vIdade - 1;
+		end if;
+	end if;
+	
+	if (vIdade < 16) then
+		RAISE_APPLICATION_ERROR(-20301, 'Autor não pode ter menos de 16 anos');
+	end if;
 end;
