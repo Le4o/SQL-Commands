@@ -259,3 +259,13 @@ begin
     
     insert into tb_log values (SQ_LOG.NEXTVAL, USER, SYSDATE, vOperacao);
 end;
+
+-----------------------------ALTERAÇÃO DE DATA--------------------------------------------
+create or replace trigger TR_LOG_PEDIDO
+before insert on TB_PEDIDO
+for each row
+begin
+    :NEW.data_pedido := SYSDATE;
+    :NEW.data_entrega := :NEW.data_pedido + 10;
+end;
+            
