@@ -252,7 +252,7 @@ begin
             if updating('ENDERECO') then
                 vOperacao := 'ENDEREÇO ALTERADO - ' || :NEW.ENDERECO || ' - ' || :OLD.ENDERECO;
             else
-                vOperacao := 'EDITORA ALTERADA - ' || :NEW.DESCRICAO || ' - ' || :OLD.ENDERECO;
+                vOperacao := 'EDITORA ALTERADA - ' || :NEW.DESCRICAO || ' - ' || :OLD.DESCRICAO;
             end if;
         end if;
     end if;
