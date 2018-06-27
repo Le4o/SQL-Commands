@@ -293,3 +293,15 @@ begin
    return cPI * pRaio**2;
    end;
 end;
+
+---------------------------------CHAMANDO UMA FUNÇÃO DO PACOTE SENAI----------------------
+
+declare 
+   varea number;
+begin
+   varea := senai.FC_CALCULA_AREA(3);
+   DBMS_OUTPUT.PUT_LINE('A figura da área é: ' || varea);
+   varea := senai.FC_CALCULA_AREA(5, 4);
+   DBMS_OUTPUT.PUT_LINE('A figura da área é: ' || varea);
+end;
+   
