@@ -268,4 +268,28 @@ begin
     :NEW.data_pedido := SYSDATE;
     :NEW.data_entrega := :NEW.data_pedido + 10;
 end;
-            
+
+----------------------------PACKAGE-------------------------------------------------------
+create or replace package senai as
+   cPI constant number := 3.1416;
+   function FC_CALCULA_AREA(pBase number, pAltura number)
+   return number;
+   function FC_CALCULA_AREA(pRaio number)
+   return number;
+end;
+
+create or replace package body senai as 
+   function FC_CALCULA_AREA(pBase number, pAltura number)
+   return number
+   is
+   begin
+      return PbASE * PaLTURA;
+   end;
+   
+function FC_CALCULA_AREA(pRaio number)
+return number
+is
+begin
+   return cPI * pRaio**2;
+   end;
+end;
