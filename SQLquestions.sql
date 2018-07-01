@@ -87,3 +87,31 @@ declare
         close cc;
     end;
 
+------------------- 4 QUESTÃO--------------------------------------------------------------
+create or replace function FC_PROCURA
+    (
+        nameK in varchar2
+    )
+    return varchar2(30)
+    as
+    nameS varchar2(30);
+    declare
+        cA int;
+        cF int;
+    begin
+        select count(a.Nome) into cA from ALUNO a where (a.Nome = nameS);
+        select count(f.Nome) into cF from FUNCIONARIO f where (f.Nome = nameS);
+
+        if (cA > 0 and cF > 0) then
+            return 'ALUNO E FUNCIONARIO';
+
+        elsif (cA > 0) then
+            return 'ALUNO';
+
+        elsif (cF > 0) then
+            return 'FUNCIONARIO';
+
+        else
+            return 'NONE';
+        end if;
+    end;
