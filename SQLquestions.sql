@@ -123,14 +123,15 @@ create or replace procedure sp_categoria_alunos
 		anoSp in int
 	)
 	as
-		ccName ALUNO.nome%TYPE;
-		ccValor MATRICULA.valor_matricula%TYPE;
-		cursor cc is
-			select a.nome, m.valor_matricula
-			from ALUNO a
-			inner join MATRICULA m on (a.id_aluno = m.id_aluno)
-			inner join CALENDARIO c on (m.id_calendario = c.id_calendario)
-			where (c.ano = anoSp);	
+	ccName ALUNO.nome%TYPE;
+	ccValor MATRICULA.valor_matricula%TYPE;
+	cursor cc is
+            select a.nome, sum(m.valor_matricula) as TOTAL_MATRICULAS
+            from ALUNO a
+            join MATRICULA m on (a.id_aluno = m.id_aluno)
+            join CALENDARIO c on (m.id_calendario = c.id_calendario)
+            where (c.ano = anoSp)
+            group by a.nome;
 	begin
 		open cc;
 		loop
@@ -138,12 +139,12 @@ create or replace procedure sp_categoria_alunos
 			exit when cc%NOTFOUND;
 
 			if ccValor > 1500 then
-				DBMS_OUTPUT.PUT_LINE(ccName + 'CATEGORIA A');
+				DBMS_OUTPUT.PUT_LINE(ccName || ' CATEGORIA A');
 			elsif ccValor > 1200 and ccValor < 1500 then
-				DBMS_OUTPUT.PUT_LINE(ccName + 'CATEGORIA B');
+				DBMS_OUTPUT.PUT_LINE(ccName || ' CATEGORIA B');
 			else
-				DBMS_OUTPUT.PUT_LINE(ccName + 'CATEGORIA C');
-
+				DBMS_OUTPUT.PUT_LINE(ccName || ' CATEGORIA C');
+            end if;
 		end loop;
 		close cc;
 
@@ -151,7 +152,7 @@ create or replace procedure sp_categoria_alunos
 			when NO_DATA_FOUND then
 			DBMS_OUTPUT.PUT_LINE('Nenhuma tupla encontrada');
 			close cc;
-			when other then
+			when others then
 			DBMS_OUTPUT.PUT_LINE('Erro não identificado ocorreu');
 			close cc;
 	end;
