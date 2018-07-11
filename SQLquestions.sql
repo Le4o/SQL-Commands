@@ -158,3 +158,26 @@ create or replace procedure sp_categoria_alunos
 	end;
 
 exec sp_categoria_alunos(2016);
+
+---------------------------6 QUESTÃO-----------------------------------------------
+
+create or replace trigger tr_log_direito
+before insert
+on MATRICULA
+for each row
+declare
+    curso varchar2(30);
+begin
+    select c.sigla into curso
+    from CURSO c
+    join ALUNO a on (c.id_curso = a.id_curso)
+    join MATRICULA m on (a.id_aluno = m.id_aluno)
+    where (m.id_matricula = :new.id_matricula);
+
+    if (curso = 'DIR') then
+        rollback;
+        RAISE_APPLICATION_ERROR(-20001,'O curso em questão teve suas atividades finalizadas');
+        return;
+    end if;
+end;
+
