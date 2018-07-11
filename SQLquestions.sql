@@ -201,3 +201,12 @@ for each row
 		insert into LOG_ALUNO (id_log, nome_aluno, nome_usuario, data_exclusao) 
 		values (sk_log.nextval, :old.nome, user, sysdate);
 	end;
+
+------------------------------8 QUESTÃO ---------------------------------------------------
+
+create or replace trigger troca_de_curso
+before update on ALUNO
+for each row
+	begin
+		delete from MATRICULA m where (:old.id_aluno = m.id_aluno);
+	end;
