@@ -181,3 +181,23 @@ begin
     end if;
 end;
 
+------------------------------7 QUESTÃO-------------------------------------------------
+
+create table LOG_ALUNO
+(
+    id_log        	int                            not null,
+    nome_aluno          varchar(30)                    not null,
+    nome_usuario        smallint                       not null,
+    data_exclusao	date 			       not null
+);
+
+create sequence sk_log;
+
+create or replace trigger exclusao_aluno
+before delete on ALUNO
+for each row
+	begin
+		delete from MATRICULA m where (:old.id_aluno = m.id_aluno);
+		insert into LOG_ALUNO (id_log, nome_aluno, nome_usuario, data_exclusao) 
+		values (sk_log.nextval, :old.nome, user, sysdate);
+	end;
